@@ -27,9 +27,6 @@ public class CreateDriverEndpoint : IEndpoint
                 .NotEmpty()
                 .MaximumLength(50);
 
-            //RuleFor(x => x.AddressLine2)
-            //    .MaximumLength(50);
-
             RuleFor(x => x.PhoneNumber)
                .NotEmpty()
                .MaximumLength(50);

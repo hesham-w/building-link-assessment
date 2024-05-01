@@ -1,4 +1,6 @@
-﻿namespace Api.Domain;
+﻿
+
+namespace Api.Domain;
 
 public class Driver : Entity
 {
@@ -9,4 +11,14 @@ public class Driver : Entity
     public string AddressLine2 { get; set; } = null!;
 
     public string PhoneNumber { get; set; } = null!;
+
+    public bool IsActivated { get; set; }
+
+    internal void Activate()
+    {
+        IsActivated = true;
+
+        var @event = new DriverActivatedEvent(Id);
+        AddEvent(@event);
+    }
 }
