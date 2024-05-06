@@ -28,4 +28,9 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Authentication\Endpoints\" />
+	  <Folder Include="Authentication\Services\" />
+	</ItemGroup>
+
 </Project>

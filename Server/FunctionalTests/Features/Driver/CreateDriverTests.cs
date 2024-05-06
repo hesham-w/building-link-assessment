@@ -1,11 +1,9 @@
 ﻿using Api.Features.Driver;
-using Api.Repositories;
 using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -16,12 +14,10 @@ namespace FunctionalTests.Features.Driver;
 public class CreateDriverTests 
 {
     private readonly HttpClient _httpClient;
-    private readonly IDriverRepository _repository;
 
     public CreateDriverTests(WebApplicationFactory<Program> factory)
     {
         _httpClient = factory.CreateClient();
-        _repository = factory.Services.GetRequiredService<IDriverRepository>();
     }
 
     private CreateDriverEndpoint.Request ValidRequest => new Faker<CreateDriverEndpoint.Request>()

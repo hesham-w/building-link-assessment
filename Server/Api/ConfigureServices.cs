@@ -1,5 +1,7 @@
-﻿using Api.Repositories;
+﻿using Api.Authentication.Services;
+using Api.Repositories;
 using FluentValidation;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace Api;
@@ -12,11 +14,13 @@ public static class ConfigureServices
         builder.AddSwagger();
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         builder.Services.AddRepositories();
+        builder.AddJwtAuthentication();
     }
 
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddTransient<IDriverRepository, DriverRepository>();
+        services.AddTransient<IUserRepository, UserRepository>();
     }
 
     private static void AddSwagger(this WebApplicationBuilder builder)
@@ -35,5 +39,25 @@ public static class ConfigureServices
         {
             configuration.ReadFrom.Configuration(context.Configuration);
         });
+    }
+
+    private static void AddJwtAuthentication(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication().AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                IssuerSigningKey = Jwt.SecurityKey(builder.Configuration["Jwt:Key"]!),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+        builder.Services.AddAuthorization();
+
+        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+        builder.Services.AddTransient<Jwt>();
     }
 }
